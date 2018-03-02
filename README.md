@@ -1,2 +1,2 @@
 # nuflow
-NuFlow - custom nubank cashflow reports
+Transfer your nubank transactions to a google spreadsheet
