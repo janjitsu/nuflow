@@ -1,6 +1,7 @@
+import sys
 import json
-import pickle
 import pygsheets
+from cache_request import CacheRequest
 from os import path
 from dateutil import parser
 from pprint import pprint
@@ -8,28 +9,29 @@ from pynubank import Nubank
 from datetime import datetime
 
 
-SAVE_FILE = "nubank.dat"
+cache = CacheRequest('get_account_feed')
 
-if path.exists(SAVE_FILE):
-    feed = pickle.load(open(SAVE_FILE,"rb"))
+if cache.has_cache():
+    feed = cache.read_cache()
 else:
     credentials = json.load(open('nubank_credentials.json'))
     nu = Nubank(credentials['cpf'],credentials['password'])
     feed = nu.get_account_feed()
-    pickle.dump(transactions, open(SAVE_FILE,"wb"))
-
+    cache.save_cache(feed);
 # Find a workbook by name and open the first sheet
 # Make sure you use the right name here.
-client = pygsheets.authorize(service_file='client_secret.json')
-nubank = client.open("Nubank")
+#client = pygsheets.authorize(service_file='client_secret.json')
+#nubank = client.open("Nubank")
 
-rows = []
-pprint(list(set(entry['category'] for entry in feed['events'])))
+#rows = []
+#pprint(list(set(entry['category'] for entry in feed['events'])))
 
-bills = list(filter(lambda x: x['category'] in ('transactions') , feed['events']))
+#bills = list(filter(lambda x: x['category'] in ('transactions') , feed['events']))
 
-sheets  = []
-rows = []
+#sheets  = []
+#rows = []
+pprint(feed)
+sys.exit(0)
 pprint(len(bills))
 for entry in bills:
     date = parser.parse(entry['time'])
