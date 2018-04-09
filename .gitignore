@@ -1,5 +1,4 @@
-client_secret.json
-nubank_credentials.json
+credentials/*
 nubank.dat
 __pycache__
 cache/*
