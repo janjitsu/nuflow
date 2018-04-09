@@ -1,32 +1,14 @@
-import sys
-import json
-import pygsheets
-from cache_request import CacheRequest
-from os import path
-from dateutil import parser
 from pprint import pprint
-from pynubank import Nubank
-from datetime import datetime
+from bills import Bills
+from transactions import Transactions
 
-credentials = json.load(open('nubank_credentials.json'))
-nu = Nubank(credentials['cpf'],credentials['password'])
 
-cache = CacheRequest('get_card_bills')
-
-if cache.has_cache():
-    bills = cache.read_cache()
-else:
-    bills = nu.get_card_bills()
-    cache.save_cache(bills);
-
-for bill in bills['bills']:
-    if bill['state'] == 'overdue':
-
-        bill_cache = CacheRequest(bill['id'])
-
-        if bill_cache.has_cache():
-            bill_details = bill_cache.read_cache()
-        else:
-            bill_details = nu.get_card_bill_details(bill)
-            bill_cache.save_cache(bill_details);
-        pprint(bill_details)
+bills_details = Bills().get_all_with_details()
+transactions = Transactions().get_all()
+for bill in bills_details:
+    for line_item in bill['bill']['line_items']:
+        pprint(line_item['id'])
+        t = next((transaction for transaction in transactions if transaction['id'] == line_item['id']))
+        pprint(t)
+        break
+    break
