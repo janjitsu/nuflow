@@ -5,10 +5,14 @@ from transactions import Transactions
 
 bills_details = Bills().get_all_with_details()
 transactions = Transactions().get_all()
+
+
 for bill in bills_details:
+    bill['bill']['transactions'] = []
+    bill['bill']['payments'] = []
     for line_item in bill['bill']['line_items']:
-        pprint(line_item['id'])
-        t = next((transaction for transaction in transactions if transaction['id'] == line_item['id']))
-        pprint(t)
-        break
-    break
+        for transaction in transactions:
+            if 'href' in line_item.keys() and transaction['href'] == line_item['href']:
+                bill['bill']['transactions'].append(transaction)
+    pprint(bill['bill']['transactions'])
+
