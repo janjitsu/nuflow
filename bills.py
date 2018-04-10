@@ -4,7 +4,7 @@ from cache_request import CacheRequest
 class Bills:
     @staticmethod
     def get_all():
-        cache = CacheRequest('get_card_bills')
+        cache = CacheRequest('get_bills')
 
         if cache.has_cache():
             bills = cache.read_cache()
@@ -22,6 +22,7 @@ class Bills:
         if bill_cache.has_cache():
             bill_details = bill_cache.read_cache()
         else:
+            nu = MyNubank()
             bill_details = nu.get_card_bill_details(bill)
             bill_cache.save_cache(bill_details);
 
@@ -35,6 +36,4 @@ class Bills:
                 bills_collection.append(self.show(bill))
 
         return bills_collection
-
-
 
