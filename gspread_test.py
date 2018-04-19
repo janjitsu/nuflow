@@ -33,6 +33,7 @@ for bill in bills:
 
     transaction_rows = []
     for transaction in bill['bill']['transactions']:
+        pprint(transaction)
         transaction_date = datetime.strptime(
             transaction['time'],
             "%Y-%m-%dT%H:%M:%SZ"
@@ -41,7 +42,7 @@ for bill in bills:
             transaction_date,
             transaction['description'],
             transaction['title'],
-            ",".join(transaction['details']['tags']),
+            ",".join(transaction['details']['tags']) if 'tags' in transaction['details'].keys() else '',
             "%.2f" % (transaction['amount'] / 100)
         ])
     sheet.insert_rows(2,1,transaction_rows)
