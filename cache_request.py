@@ -4,7 +4,7 @@ from pprint import pprint
 
 class CacheRequest:
     def __init__(self, cache_name):
-        self.cache_dir = 'cache'
+        self.cache_dir = '__pycache__'
         self.filename = cache_name
 
     def get_file_path(self, filename=None):
@@ -12,7 +12,7 @@ class CacheRequest:
         return '%s/%s.dat' % (self.cache_dir, filepath)
 
     def save_cache(self, data):
-        with open(self.get_file_path(), 'wb') as handle:
+        with open(self.get_file_path(), 'wb+') as handle:
             pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def read_cache(self):
