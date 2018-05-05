@@ -1,3 +1,4 @@
+import re
 from my_nubank import MyNubank
 from cache_request import CacheRequest
 
@@ -10,7 +11,7 @@ class Bills:
             bills = cache.read_cache()
         else:
             nu = MyNubank()
-            bills = nu.get_card_bills()
+            bills = nu.get_bills()
             cache.save_cache(bills)
 
         return bills
@@ -23,7 +24,7 @@ class Bills:
             bill_details = bill_cache.read_cache()
         else:
             nu = MyNubank()
-            bill_details = nu.get_card_bill_details(bill)
+            bill_details = nu.get_bill_details(bill)
             bill_cache.save_cache(bill_details);
 
         return bill_details
@@ -31,8 +32,15 @@ class Bills:
     def get_all_with_details(self):
         bills_collection = []
         bills = self.get_all()
-        for bill in bills['bills']:
-            if bill['state'] == 'overdue':
+        from pprint import pprint
+        from os import sys
+        for bill in bills:
+            if bill['state'] != 'future':
+                if 'id' not in bill:
+                    # find id by href
+                    href = bill['_links']['self']['href']
+                    matches = re.match(r'(^.*/accounts/([^/]+)/.*$)',href)
+                    bill['id'] = matches.group(2)
                 bills_collection.append(self.show(bill))
 
         return bills_collection
