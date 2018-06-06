@@ -9,7 +9,7 @@ client = pygsheets.authorize(service_file='credentials/client_secret.json')
 # Find a workbook by name and open the first sheet
 # Make sure you use the right name here.
 
-bills = BillTransactions.get_all()
+bills = BillTransactions.get_last(6)
 
 #clear spreadsheet
 spreadsheet = client.open("Nubank")

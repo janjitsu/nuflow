@@ -1,4 +1,5 @@
 import re
+import time
 from my_nubank import MyNubank
 from cache_request import CacheRequest
 
@@ -29,11 +30,8 @@ class Bills:
 
         return bill_details
 
-    def get_all_with_details(self):
+    def process_bills_details(self, bills):
         bills_collection = []
-        bills = self.get_all()
-        from pprint import pprint
-        from os import sys
         for bill in bills:
             if bill['state'] != 'future':
                 if 'id' not in bill:
@@ -42,6 +40,14 @@ class Bills:
                     matches = re.match(r'(^.*/accounts/([^/]+)/.*$)',href)
                     bill['id'] = matches.group(2)
                 bills_collection.append(self.show(bill))
+                time.sleep(1)
 
         return bills_collection
 
+    def get_all_with_details(self):
+        bills = self.get_all()
+        return self.process_bills_details(bills)
+
+    def get_last_with_details(self, bills_qty = 1):
+        bills = self.get_all()
+        return self.process_bills_details(bills[:bills_qty])
