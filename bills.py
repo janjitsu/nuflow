@@ -2,6 +2,7 @@ import re
 import time
 from my_nubank import MyNubank
 from cache_request import CacheRequest
+from pprint import pprint
 
 class Bills:
     @staticmethod
@@ -33,14 +34,15 @@ class Bills:
     def process_bills_details(self, bills):
         bills_collection = []
         for bill in bills:
-            if bill['state'] != 'future':
+            pprint(bill['state']);
+            if bill['state'] not in ['future','open']:
                 if 'id' not in bill:
                     # find id by href
                     href = bill['_links']['self']['href']
                     matches = re.match(r'(^.*/accounts/([^/]+)/.*$)',href)
                     bill['id'] = matches.group(2)
                 bills_collection.append(self.show(bill))
-                time.sleep(1)
+                time.sleep(2)
 
         return bills_collection
 
@@ -51,3 +53,6 @@ class Bills:
     def get_last_with_details(self, bills_qty = 1):
         bills = self.get_all()
         return self.process_bills_details(bills[:bills_qty])
+
+if __name__ == '__main__':
+    pprint(Bills().get_last_with_details(12))

@@ -14,3 +14,10 @@ class Transactions:
             cache.save_cache(transactions)
 
         return transactions
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+
+    transactions = Transactions.get_all()
+    pprint(transactions)
