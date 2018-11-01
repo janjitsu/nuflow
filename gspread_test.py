@@ -8,8 +8,11 @@ client = pygsheets.authorize(service_file='credentials/client_secret.json')
 
 # Find a workbook by name and open the first sheet
 # Make sure you use the right name here.
+qtd_bills = 12
+if len(sys.argv) == 2:
+    qtd_bills = sys.argv[1]
 
-bills = BillTransactions.get_last(12)
+bills = BillTransactions.get_last(qtd_bills)
 pprint(bills)
 #clear spreadsheet
 spreadsheet = client.open("Nubank")
